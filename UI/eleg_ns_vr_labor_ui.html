@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sötét Dashboard VR Labor UI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            900: '#0a0a0a', // Deepest background
+                            800: '#141414', // Panel background
+                            700: '#1e1e1e', // Card/Input background
+                            600: '#2a2a2a', // Hover/Active states
+                            border: '#262626' // Subtle borders
+                        },
+                        accent: {
+                            blue: '#0d6efd', // Vibrant electric blue
+                            blueHover: '#0b5ed7',
+                            red: '#ef4444'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0a0a0a;
+            color: #ffffff;
+            margin: 0;
+            overflow: hidden;
+            /* Subtle radial gradient to simulate screen depth, not glassmorphism */
+            background-image: radial-gradient(circle at 50% 50%, #141414 0%, #0a0a0a 100%);
+        }
+
+        /* Custom Panel Styling - Flat, dark, sharp */
+        .panel {
+            background-color: theme('colors.dark.800');
+            border: 1px solid theme('colors.dark.border');
+            border-radius: 1rem;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.8);
+        }
+
+        /* Sleek Range Slider */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+            height: 24px;
+        }
+        input[type=range]:focus {
+            outline: none;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 6px;
+            cursor: pointer;
+            background: theme('colors.dark.700');
+            border-radius: 999px;
+            border: 1px solid theme('colors.dark.border');
+        }
+        input[type=range]::-webkit-slider-thumb {
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: theme('colors.accent.blue');
+            cursor: pointer;
+            -webkit-appearance: none;
+            margin-top: -6px;
+            box-shadow: 0 0 10px rgba(13, 110, 253, 0.5);
+            transition: transform 0.1s;
+        }
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        /* Circular Progress Animation */
+        .progress-ring__circle {
+            transition: stroke-dashoffset 0.35s;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: theme('colors.dark.600'); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: theme('colors.dark.border'); }
+    </style>
+</head>
+<body class="antialiased w-screen h-screen flex flex-col justify-between p-6 box-border relative">
+
+    <!-- 3D Center Placeholder -->
+    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center z-0 opacity-20 pointer-events-none">
+        <i class="fa-brands fa-codepen text-[150px] text-zinc-500 mb-4"></i>
+        <div class="text-zinc-500 text-sm font-mono tracking-widest">3D_WORKSPACE_AREA</div>
+    </div>
+
+    <!-- Top Status Pill -->
+    <div class="absolute top-6 left-1/2 transform -translate-x-1/2 z-20">
+        <div class="bg-dark-800 border border-dark-border px-6 py-2 rounded-full flex items-center gap-5 text-sm font-medium shadow-lg">
+            <span class="flex items-center gap-2 text-zinc-300"><i class="fa-regular fa-snowflake text-accent-blue"></i> Jég</span>
+            <div class="w-px h-4 bg-dark-border"></div>
+            <span class="text-white" id="topTempDisplay">-30 °C</span>
+            <div class="w-px h-4 bg-dark-border"></div>
+            <span class="text-zinc-400">1,0 atm</span>
+        </div>
+    </div>
+
+    <!-- Left & Right Columns Container -->
+    <div class="flex justify-between w-full h-full max-w-[1600px] mx-auto z-10 pt-16 pb-[140px]">
+        
+        <!-- LEFT PANEL: Gyűjtemény -->
+        <div class="panel w-[380px] h-full flex flex-col p-5">
+            <div class="flex justify-between items-center mb-5">
+                <h2 class="text-lg font-semibold text-white">Gyűjtemény</h2>
+                <span class="text-xs text-zinc-400 font-mono">2 / 10</span>
+            </div>
+            
+            <!-- Segmented Pill Control -->
+            <div class="bg-dark-900 border border-dark-border rounded-full p-1 flex gap-1 mb-5">
+                <button class="flex-1 bg-dark-700 text-white rounded-full py-1.5 text-xs font-medium shadow-sm transition-colors">Összes</button>
+                <button class="flex-1 text-zinc-400 hover:text-zinc-200 hover:bg-dark-800 rounded-full py-1.5 text-xs font-medium transition-colors">Állapotok</button>
+                <button class="flex-1 text-zinc-400 hover:text-zinc-200 hover:bg-dark-800 rounded-full py-1.5 text-xs font-medium transition-colors">Változások</button>
+                <button class="flex-1 text-zinc-400 hover:text-zinc-200 hover:bg-dark-800 rounded-full py-1.5 text-xs font-medium transition-colors">Fogalmak</button>
+            </div>
+
+            <!-- List Items -->
+            <div class="flex-1 overflow-y-auto pr-2 space-y-2">
+                <!-- Active Item -->
+                <div class="bg-dark-700 border border-dark-border rounded-xl p-3 flex items-center justify-between cursor-pointer hover:bg-dark-600 transition-colors">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-full bg-dark-900 flex items-center justify-center text-accent-blue border border-dark-border">
+                            <i class="fa-regular fa-snowflake"></i>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-sm font-medium text-white">Szilárd jég</span>
+                            <span class="text-[11px] text-accent-blue mt-0.5">Aktív állapot</span>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-zinc-600 text-xs"></i>
+                </div>
+
+                <!-- Unlocked Item -->
+                <div class="bg-dark-800 border border-dark-border rounded-xl p-3 flex items-center justify-between cursor-pointer hover:bg-dark-700 transition-colors">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-full bg-dark-900 flex items-center justify-center text-zinc-300 border border-dark-border">
+                            <i class="fa-brands fa-sketch"></i>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-sm font-medium text-white">Jégkristály</span>
+                            <span class="text-[11px] text-zinc-500 mt-0.5">Megnyitás</span>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-zinc-600 text-xs"></i>
+                </div>
+
+                <!-- Locked Items -->
+                <div class="bg-dark-900/50 border border-transparent rounded-xl p-3 flex items-center gap-3 opacity-60">
+                    <div class="w-9 h-9 rounded-full bg-dark-800 flex items-center justify-center text-zinc-600">
+                        <i class="fa-solid fa-lock text-xs"></i>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-sm font-medium text-zinc-400">Zárolt kártya</span>
+                        <span class="text-[11px] text-zinc-600 mt-0.5">Felfedezésre vár</span>
+                    </div>
+                </div>
+                
+                <div class="bg-dark-900/50 border border-transparent rounded-xl p-3 flex items-center gap-3 opacity-60">
+                    <div class="w-9 h-9 rounded-full bg-dark-800 flex items-center justify-center text-zinc-600">
+                        <i class="fa-solid fa-lock text-xs"></i>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-sm font-medium text-zinc-400">Zárolt kártya</span>
+                        <span class="text-[11px] text-zinc-600 mt-0.5">Felfedezésre vár</span>
+                    </div>
+                </div>
+                
+                <div class="bg-dark-900/50 border border-transparent rounded-xl p-3 flex items-center gap-3 opacity-60">
+                    <div class="w-9 h-9 rounded-full bg-dark-800 flex items-center justify-center text-zinc-600">
+                        <i class="fa-solid fa-lock text-xs"></i>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-sm font-medium text-zinc-400">Zárolt kártya</span>
+                        <span class="text-[11px] text-zinc-600 mt-0.5">Felfedezésre vár</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT PANELS -->
+        <div class="w-[380px] flex flex-col gap-5 h-full">
+            
+            <!-- TOP RIGHT: Küldetés -->
+            <div class="panel p-5 flex flex-col">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-semibold text-white">Küldetés</h2>
+                    <button class="text-zinc-400 hover:text-white transition-colors"><i class="fa-solid fa-ellipsis"></i></button>
+                </div>
+
+                <div class="bg-dark-700 border border-dark-border rounded-xl p-4 mb-4">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-sm font-semibold text-white">Szilárd halmazállapot (Jég)</h3>
+                        <span class="text-[10px] text-zinc-400 bg-dark-900 px-2 py-1 rounded-full">1 / 10</span>
+                    </div>
+                    <p class="text-xs text-zinc-400 leading-relaxed mb-3">
+                        Koppints a tutoron lebegő sárga felkiáltójelre a szilárd halmazállapot megismeréséhez!
+                    </p>
+                    <div class="flex items-start gap-2 bg-dark-800 p-2.5 rounded-lg border border-dark-border">
+                        <i class="fa-solid fa-circle-info text-accent-blue text-[10px] mt-0.5"></i>
+                        <p class="text-[10px] text-zinc-300">Tipp: Mutass rá a kontroller lézerével vagy koppints a robot felkiáltójelére.</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 mt-auto">
+                    <button class="flex-1 bg-dark-700 hover:bg-dark-600 text-zinc-300 text-xs font-medium py-2.5 rounded-lg border border-dark-border transition-colors">Előző</button>
+                    <button class="flex-1 bg-dark-700 hover:bg-dark-600 text-zinc-300 text-xs font-medium py-2.5 rounded-lg border border-dark-border transition-colors">Átugrás</button>
+                    <button class="flex-[1.5] bg-accent-blue hover:bg-accent-blueHover text-white text-xs font-medium py-2.5 rounded-lg transition-colors shadow-[0_0_15px_rgba(13,110,253,0.3)]">Következő</button>
+                </div>
+            </div>
+
+            <!-- BOTTOM RIGHT: Nyomás és Mérés -->
+            <div class="panel flex-1 p-5 flex flex-col items-center justify-center relative">
+                <div class="absolute top-5 left-5 right-5 flex justify-between items-center">
+                    <h2 class="text-lg font-semibold text-white">Nyomás és Mérés</h2>
+                    <span class="text-[10px] text-zinc-400 bg-dark-700 px-2 py-1 rounded border border-dark-border">Forráspont: 100°C</span>
+                </div>
+
+                <!-- Circular Progress Ring (Dashboard Style) -->
+                <div class="relative w-48 h-48 mt-8 flex items-center justify-center">
+                    <svg class="w-full h-full" viewBox="0 0 120 120">
+                        <!-- Background track -->
+                        <circle cx="60" cy="60" r="50" fill="none" stroke="#1e1e1e" stroke-width="12" />
+                        
+                        <!-- Progress track (50% for 1.0 atm out of 2.0 max) -->
+                        <circle cx="60" cy="60" r="50" fill="none" stroke="#0d6efd" stroke-width="12" 
+                                stroke-dasharray="314.159" stroke-dashoffset="157.079" 
+                                stroke-linecap="round" class="progress-ring__circle" />
+                        
+                        <!-- Decorative dots inside the track (optional styling mimicking the reference) -->
+                        <circle cx="25" cy="95" r="3" fill="#2a2a2a" />
+                        <circle cx="42" cy="107" r="3" fill="#2a2a2a" />
+                        <circle cx="60" cy="112" r="3" fill="#2a2a2a" />
+                        <circle cx="78" cy="107" r="3" fill="#2a2a2a" />
+                        <circle cx="95" cy="95" r="3" fill="#2a2a2a" />
+                    </svg>
+                    
+                    <!-- Inner Text -->
+                    <div class="absolute flex flex-col items-center justify-center">
+                        <span class="text-3xl font-bold text-white tracking-tight">1.0</span>
+                        <span class="text-xs text-zinc-400 mt-1 uppercase tracking-wider">atm</span>
+                    </div>
+                </div>
+                
+                <div class="w-full mt-6 px-4">
+                    <input type="range" min="0" max="20" value="10" class="w-full">
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- BOTTOM CENTER: Hőszabályzás -->
+    <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 w-[800px] panel p-5 flex flex-col z-20">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-sm font-semibold text-white flex items-center gap-2">
+                Hőszabályzás
+            </h2>
+            <div class="text-[10px] text-zinc-400 flex items-center gap-1.5 bg-dark-900 px-2 py-1 rounded-full border border-dark-border">
+                <span class="w-1.5 h-1.5 rounded-full bg-accent-blue"></span>
+                Jég (Kikapcsolva)
+            </div>
+        </div>
+
+        <div class="flex items-center gap-8">
+            <!-- Large Value Display -->
+            <div class="w-32 shrink-0 flex flex-col">
+                <span class="text-4xl font-semibold text-white tracking-tighter" id="bottomTempDisplay">-30°C</span>
+                <span class="text-[10px] text-zinc-500 mt-1 uppercase">Cél hőmérséklet</span>
+            </div>
+
+            <!-- Central Controls (Slider & Buttons) -->
+            <div class="flex-1 flex flex-col gap-5">
+                <!-- Segmented Control for States -->
+                <div class="flex gap-2">
+                    <button class="flex-1 bg-dark-900 hover:bg-dark-700 text-zinc-400 text-xs py-2 rounded-lg border border-dark-border transition-colors flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-fire text-zinc-500"></i> Kis láng
+                    </button>
+                    <button class="flex-1 bg-dark-900 hover:bg-dark-700 text-zinc-400 text-xs py-2 rounded-lg border border-dark-border transition-colors flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-fire-flame-curved text-zinc-500"></i> Max
+                    </button>
+                    <!-- Active State Button -->
+                    <button class="flex-1 bg-dark-600 text-white text-xs py-2 rounded-lg border border-dark-border transition-colors shadow-inner flex items-center justify-center gap-2">
+                        <span class="w-1.5 h-1.5 rounded-full bg-white"></span> Láng KI
+                    </button>
+                    <button class="flex-1 bg-dark-900 hover:bg-dark-700 text-zinc-400 text-xs py-2 rounded-lg border border-dark-border transition-colors flex items-center justify-center gap-2">
+                        <i class="fa-regular fa-snowflake text-accent-blue"></i> Hűtés
+                    </button>
+                </div>
+
+                <!-- Temperature Slider -->
+                <div class="flex items-center gap-3">
+                    <span class="text-xs font-medium text-accent-blue">-50°C</span>
+                    <input type="range" min="0" max="100" value="20" id="mainTempSlider" class="flex-1">
+                    <span class="text-xs font-medium text-accent-red">150°C</span>
+                </div>
+            </div>
+            
+            <!-- Side Actions -->
+            <div class="flex flex-col gap-2 shrink-0">
+                <button class="bg-dark-700 hover:bg-dark-600 text-zinc-300 text-[11px] py-1.5 px-3 rounded border border-dark-border transition-colors text-left w-28">
+                    <i class="fa-solid fa-plus text-zinc-500 mr-1.5"></i> 10% fűtés
+                </button>
+                <button class="bg-dark-700 hover:bg-dark-600 text-zinc-300 text-[11px] py-1.5 px-3 rounded border border-dark-border transition-colors text-left w-28">
+                    <i class="fa-solid fa-minus text-zinc-500 mr-1.5"></i> 10% hűtés
+                </button>
+                <div class="flex gap-2 mt-1">
+                    <button class="flex-1 bg-dark-900 hover:bg-dark-800 text-zinc-400 text-[10px] py-1.5 rounded border border-dark-border transition-colors" title="Szünet"><i class="fa-solid fa-pause"></i></button>
+                    <button class="flex-1 bg-dark-900 hover:bg-dark-800 text-zinc-400 text-[10px] py-1.5 rounded border border-dark-border transition-colors" title="Alaphelyzet"><i class="fa-solid fa-rotate-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const slider = document.getElementById('mainTempSlider');
+        const displayBottom = document.getElementById('bottomTempDisplay');
+        const displayTop = document.getElementById('topTempDisplay');
+
+        slider.addEventListener('input', (e) => {
+            const val = e.target.value;
+            // Skálázás egy fiktív -50 és 150 közötti értékre
+            const temp = Math.floor((val / 100) * 200 - 50); 
+            displayBottom.innerText = `${temp}°C`;
+            displayTop.innerText = `${temp} °C`;
+        });
+    </script>
+</body>
+</html>

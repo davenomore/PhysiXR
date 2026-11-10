@@ -1,0 +1,142 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <!-- Háttér gradiens: visionOS mélykék-kozmikus sötét -->
+    <radialGradient id="bgGrad" cx="50%" cy="25%" r="75%" fx="50%" fy="15%">
+      <stop offset="0%" stop-color="#1f2752" />
+      <stop offset="50%" stop-color="#101530" />
+      <stop offset="100%" stop-color="#050711" />
+    </radialGradient>
+
+    <!-- Felső üvegfény gradiens -->
+    <linearGradient id="glossGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.32" />
+      <stop offset="40%" stop-color="#ffffff" stop-opacity="0.08" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.0" />
+    </linearGradient>
+
+    <!-- Szegély gradiens -->
+    <linearGradient id="borderGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.45" />
+      <stop offset="50%" stop-color="#64d2ff" stop-opacity="0.25" />
+      <stop offset="100%" stop-color="#bf5af2" stop-opacity="0.10" />
+    </linearGradient>
+
+    <!-- Cián-Kék atomi pálya gradiens -->
+    <linearGradient id="orbitCyan" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#64d2ff" />
+      <stop offset="50%" stop-color="#0a84ff" />
+      <stop offset="100%" stop-color="#5e5ce6" />
+    </linearGradient>
+
+    <!-- Lila-Magenta atomi pálya gradiens -->
+    <linearGradient id="orbitPurple" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ff375f" />
+      <stop offset="50%" stop-color="#bf5af2" />
+      <stop offset="100%" stop-color="#5e5ce6" />
+    </linearGradient>
+
+    <!-- Arany horizontális sík gradiens -->
+    <linearGradient id="orbitGold" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#ffd60a" stop-opacity="0.8" />
+      <stop offset="50%" stop-color="#30d158" stop-opacity="0.7" />
+      <stop offset="100%" stop-color="#64d2ff" stop-opacity="0.8" />
+    </linearGradient>
+
+    <!-- Központi kvantum mag radiális gradiens -->
+    <radialGradient id="coreGrad" cx="38%" cy="32%" r="68%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="35%" stop-color="#a6e3e9" />
+      <stop offset="70%" stop-color="#0a84ff" />
+      <stop offset="100%" stop-color="#033076" />
+    </radialGradient>
+
+    <!-- Kvantum fényszórás (Glow) filterek -->
+    <filter id="superGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="14" result="blur1" />
+      <feGaussianBlur stdDeviation="28" result="blur2" />
+      <feMerge>
+        <feMergeNode in="blur2" />
+        <feMergeNode in="blur1" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <filter id="coreGlow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="18" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <filter id="particleGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- 1. Ikon alaptest: Apple Squircle lekerekített forma -->
+  <rect x="16" y="16" width="480" height="480" rx="108" fill="url(#bgGrad)" />
+
+  <!-- 2. Finom belső fény-glória a háttérben -->
+  <circle cx="256" cy="256" r="140" fill="#0a84ff" opacity="0.16" filter="url(#superGlow)" />
+  <circle cx="256" cy="256" r="90" fill="#bf5af2" opacity="0.14" filter="url(#superGlow)" />
+
+  <!-- 3. Lebegő kvantum részecskék a térben (fizika/részecskemodell szimbólumok) -->
+  <circle cx="120" cy="150" r="3.5" fill="#64d2ff" opacity="0.75" filter="url(#particleGlow)" />
+  <circle cx="390" cy="130" r="4" fill="#ffd60a" opacity="0.8" filter="url(#particleGlow)" />
+  <circle cx="380" cy="370" r="3" fill="#bf5af2" opacity="0.75" filter="url(#particleGlow)" />
+  <circle cx="130" cy="360" r="4.5" fill="#30d158" opacity="0.8" filter="url(#particleGlow)" />
+  <circle cx="210" cy="100" r="2.5" fill="#ffffff" opacity="0.6" />
+  <circle cx="310" cy="410" r="2.5" fill="#ffffff" opacity="0.6" />
+
+  <!-- 4. Térbeli Atomi Keringési Pályák (Spatial Quantum Orbits) -->
+  <g transform="translate(256, 256)">
+    <!-- 4.1. Horizontális térbeli gyűrű (Spatial Ground Plane) -->
+    <ellipse cx="0" cy="0" rx="170" ry="46" fill="none" stroke="url(#orbitGold)" stroke-width="3" stroke-dasharray="14 10" opacity="0.55" transform="rotate(-12)" />
+
+    <!-- 4.2. Pálya 1: Cián-Kék elforgatott gyűrű (töltés / mező) -->
+    <g transform="rotate(38)">
+      <ellipse cx="0" cy="0" rx="180" ry="58" fill="none" stroke="url(#orbitCyan)" stroke-width="7" filter="url(#superGlow)" opacity="0.85" />
+      <ellipse cx="0" cy="0" rx="180" ry="58" fill="none" stroke="#ffffff" stroke-width="2.5" opacity="0.9" />
+      <!-- Keringő elektron / részecske 1 -->
+      <circle cx="180" cy="0" r="9" fill="#ffffff" filter="url(#coreGlow)" />
+      <circle cx="180" cy="0" r="5" fill="#64d2ff" />
+    </g>
+
+    <!-- 4.3. Pálya 2: Lila-Magenta elforgatott gyűrű (energia / foton) -->
+    <g transform="rotate(-38)">
+      <ellipse cx="0" cy="0" rx="180" ry="58" fill="none" stroke="url(#orbitPurple)" stroke-width="7" filter="url(#superGlow)" opacity="0.85" />
+      <ellipse cx="0" cy="0" rx="180" ry="58" fill="none" stroke="#ffffff" stroke-width="2.5" opacity="0.9" />
+      <!-- Keringő elektron / részecske 2 -->
+      <circle cx="-180" cy="0" r="9" fill="#ffffff" filter="url(#coreGlow)" />
+      <circle cx="-180" cy="0" r="5" fill="#ff375f" />
+    </g>
+
+    <!-- 4.4. Függőleges finom fénygyűrű: a görög Phi (Φ) szimbólum íve (Physics) -->
+    <ellipse cx="0" cy="0" rx="58" ry="175" fill="none" stroke="#64d2ff" stroke-width="3.5" opacity="0.4" stroke-dasharray="8 6" />
+
+    <!-- 5. Stylized 'X' és 'R' Térbeli Vektor sugarak a háttérben -->
+    <!-- X-tengelyű dinamikus vonalak a mag mögött -->
+    <path d="M -85 -85 L -35 -35 M 35 35 L 85 85" stroke="#64d2ff" stroke-width="4" stroke-linecap="round" opacity="0.5" />
+    <path d="M 85 -85 L 35 -35 M -35 35 L -85 85" stroke="#bf5af2" stroke-width="4" stroke-linecap="round" opacity="0.5" />
+
+    <!-- 6. Központi Fénylő Kvantum Mag (Photon / Atom Nucleus) -->
+    <!-- Külső ragyogó korona -->
+    <circle cx="0" cy="0" r="46" fill="#0a84ff" opacity="0.35" filter="url(#superGlow)" />
+    <!-- Belső fényes mag -->
+    <circle cx="0" cy="0" r="32" fill="url(#coreGrad)" filter="url(#coreGlow)" />
+    <!-- Csillanás a magon -->
+    <circle cx="-9" cy="-9" r="10" fill="#ffffff" opacity="0.75" />
+    <circle cx="-5" cy="-5" r="4" fill="#ffffff" opacity="0.9" />
+  </g>
+
+  <!-- 7. Felső üvegcsillanás (visionOS Specular Gloss) -->
+  <path d="M 24 120 C 24 60, 60 24, 120 24 L 392 24 C 452 24, 488 60, 488 120 C 488 150, 430 180, 256 180 C 82 180, 24 150, 24 120 Z" fill="url(#glossGrad)" />
+
+  <!-- 8. Finom külső prémium üvegszegély -->
+  <rect x="17" y="17" width="478" height="478" rx="107" fill="none" stroke="url(#borderGrad)" stroke-width="2.5" />
+</svg>
